@@ -1,5 +1,4 @@
-﻿
-using AppWebExemplo.Configs;
+﻿using AppWebExemplo.Configs;
 using AppWebExemplo.Model;
 using System;
 using System.Collections.Generic;
@@ -41,16 +40,23 @@ namespace AppWebExemplo.DAO
 
             while (leitor.Read())
             {
+                DateTime? data = DAOHelper.GetDateTime(
+                    leitor, "data_pro"
+                );
+
                 var processo = new Processo
                 {
-                    Id = leitor.GetInt32(leitor.GetOrdinal("id_pro")),
-                    Numero = leitor.GetString(leitor.GetOrdinal("numero_pro")),
+                    Id = leitor.GetInt32(
+                        leitor.GetOrdinal("id_pro")
+                    ),
 
-                    Data = leitor.IsDBNull(leitor.GetOrdinal("data_pro"))
-                        ? null
-                        : DateOnly.FromDateTime(
-                            leitor.GetDateTime(leitor.GetOrdinal("data_pro"))
-                        ),
+                    Numero = leitor.GetString(
+                        leitor.GetOrdinal("numero_pro")
+                    ),
+
+                    Data = data.HasValue
+                        ? DateOnly.FromDateTime(data.Value)
+                        : null,
 
                     Interessado = leitor.GetString(
                         leitor.GetOrdinal("interessado_pro")
@@ -60,12 +66,9 @@ namespace AppWebExemplo.DAO
                         leitor.GetOrdinal("assunto_pro")
                     ),
 
-                    Descricao = leitor.IsDBNull(
-                        leitor.GetOrdinal("descricao_pro"))
-                        ? string.Empty
-                        : leitor.GetString(
-                            leitor.GetOrdinal("descricao_pro")
-                        ),
+                    Descricao = DAOHelper.GetString(
+                        leitor, "descricao_pro"
+                    ),
 
                     Situacao = leitor.GetString(
                         leitor.GetOrdinal("situacao_pro")
@@ -126,7 +129,8 @@ namespace AppWebExemplo.DAO
             );
 
             comando.Parameters.AddWithValue(
-                "@descricao", processo.Descricao
+                "@descricao",
+                (object?)processo.Descricao ?? DBNull.Value
             );
 
             comando.Parameters.AddWithValue(
@@ -165,19 +169,23 @@ namespace AppWebExemplo.DAO
                 return null;
             }
 
+            DateTime? data = DAOHelper.GetDateTime(
+                leitor, "data_pro"
+            );
+
             return new Processo
             {
-                Id = leitor.GetInt32(leitor.GetOrdinal("id_pro")),
+                Id = leitor.GetInt32(
+                    leitor.GetOrdinal("id_pro")
+                ),
 
                 Numero = leitor.GetString(
                     leitor.GetOrdinal("numero_pro")
                 ),
 
-                Data = leitor.IsDBNull(leitor.GetOrdinal("data_pro"))
-                    ? null
-                    : DateOnly.FromDateTime(
-                        leitor.GetDateTime(leitor.GetOrdinal("data_pro"))
-                    ),
+                Data = data.HasValue
+                    ? DateOnly.FromDateTime(data.Value)
+                    : null,
 
                 Interessado = leitor.GetString(
                     leitor.GetOrdinal("interessado_pro")
@@ -187,12 +195,9 @@ namespace AppWebExemplo.DAO
                     leitor.GetOrdinal("assunto_pro")
                 ),
 
-                Descricao = leitor.IsDBNull(
-                    leitor.GetOrdinal("descricao_pro"))
-                    ? string.Empty
-                    : leitor.GetString(
-                        leitor.GetOrdinal("descricao_pro")
-                    ),
+                Descricao = DAOHelper.GetString(
+                    leitor, "descricao_pro"
+                ),
 
                 Situacao = leitor.GetString(
                     leitor.GetOrdinal("situacao_pro")
@@ -239,7 +244,8 @@ namespace AppWebExemplo.DAO
             );
 
             comando.Parameters.AddWithValue(
-                "@descricao", processo.Descricao
+                "@descricao",
+                (object?)processo.Descricao ?? DBNull.Value
             );
 
             comando.Parameters.AddWithValue(
